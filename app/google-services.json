@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "854154052138",
+    "project_id": "classschuldeapp",
+    "storage_bucket": "classschuldeapp.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:854154052138:android:0edd7586baaf9291f67953",
+        "android_client_info": {
+          "package_name": "com.akash.classschuldeapp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCqw67UHSLcEO2AIFEqfDBEvi6SU63-r38"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
