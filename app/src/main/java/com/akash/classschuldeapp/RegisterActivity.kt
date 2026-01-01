@@ -19,13 +19,19 @@ class RegisterActivity : AppCompatActivity() {
         binding = ActivityRegisterBinding.inflate(layoutInflater)
         enableEdgeToEdge()
         setContentView(binding.root)
+        // SAVE REGISTER FLAG
+        val prefs = getSharedPreferences("user_prefs", MODE_PRIVATE)
+        prefs.edit().putBoolean("isRegistered", true).apply()
+
 
 
         auth = FirebaseAuth.getInstance()
+
         binding.btnRegister.setOnClickListener {
             val etemail = binding.etEmail.text.toString().trim()
             val password = binding.etPassword.text.toString().trim()
-            val confirmPassword = binding.etPassword.text.toString().trim()
+            val confirmPassword = binding.etconfirmpassword.text.toString().trim()
+
 
 
             if (etemail.isEmpty() || password.isEmpty() || confirmPassword.isEmpty()) {
@@ -55,6 +61,9 @@ class RegisterActivity : AppCompatActivity() {
             auth.createUserWithEmailAndPassword(etemail, password)
                 .addOnCompleteListener(this) { task ->
                     if (task.isSuccessful) {
+                        val prefs = getSharedPreferences("user_prefs", MODE_PRIVATE)
+                        prefs.edit().putBoolean("isRegistered", true).apply()
+
                         Toast.makeText(this, "Registration successful!", Toast.LENGTH_SHORT).show()
                         val intent = Intent(this, MainActivity::class.java)
                         intent.flags =
@@ -69,6 +78,10 @@ class RegisterActivity : AppCompatActivity() {
                         ).show()
                     }
                 }
+        }
+        binding.tvLoginNow.setOnClickListener {
+            val intent= Intent(this, loginActivity::class.java)
+            startActivity(intent)
         }
 
 

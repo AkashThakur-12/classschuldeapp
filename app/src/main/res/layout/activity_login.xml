@@ -104,7 +104,27 @@
                 android:layout_marginTop="15dp"/>
 
 
+            <ImageView
+
+                android:layout_width="34dp"
+                android:layout_height="34dp"
+                android:layout_margin="20dp"
+                android:src="@drawable/google_logo"
+                android:contentDescription="Google Logo"
+                android:id="@+id/google"/>
+
+            <ImageView
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:src="@drawable/fingerprint_dialog_fp_icon"
+                android:id="@+id/loginfingerprintButton"
+                />
+
+
+
+
         </LinearLayout>
     </LinearLayout>
 </LinearLayout>
+
 
