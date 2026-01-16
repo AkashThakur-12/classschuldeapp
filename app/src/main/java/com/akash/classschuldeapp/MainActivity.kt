@@ -37,15 +37,15 @@ class MainActivity : AppCompatActivity() {
         val days = arrayOf("Select Day", "MON", "TUE", "WED", "THUR", "FRI")
 
         // Adapters
-//        branchSpinner.adapter =
-//            ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, branches)
-//        semSpinner.adapter =
-//            ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, semesters)
-//        daySpinner.adapter =
-//            ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, days)
-        setupSpinner(branchSpinner, branches.toList())
-        setupSpinner(semSpinner, semesters.toList())
-        setupSpinner(daySpinner, days.toList())
+        branchSpinner.adapter =
+            ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, branches)
+        semSpinner.adapter =
+            ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, semesters)
+        daySpinner.adapter =
+            ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, days)
+//        setupSpinner(branchSpinner, branches.toList())
+//        setupSpinner(semSpinner, semesters.toList())
+//        setupSpinner(daySpinner, days.toList())
 
 
 
@@ -68,38 +68,38 @@ class MainActivity : AppCompatActivity() {
         daySpinner.onItemSelectedListener = spinnerListener
     }
 
-    private fun setupSpinner(spinner: Spinner, items: List<String>) {
-
-        val adapter = object : ArrayAdapter<String>(
-            this,
-            R.layout.spinner_items,
-            items
-        ) {
-
-            override fun isEnabled(position: Int): Boolean {
-                // Disable first item (hint)
-                return position != 0
-            }
-
-            override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
-                val view = super.getView(position, convertView, parent) as TextView
-                view.setTextColor(
-                    if (position == 0) Color.GRAY else Color.BLACK
-                )
-                return view
-            }
-
-            override fun getDropDownView(position: Int, convertView: View?, parent: ViewGroup): View {
-                val view = super.getDropDownView(position, convertView, parent) as TextView
-                view.setTextColor(Color.BLACK)
-                view.setPadding(24, 24, 24, 24)
-                return view
-            }
-        }
-
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-        spinner.adapter = adapter
-    }
+//    private fun setupSpinner(spinner: Spinner, items: List<String>) {
+//
+//        val adapter = object : ArrayAdapter<String>(
+//            this,
+//            R.layout.spinner_items,
+//            items
+//        ) {
+//
+//            override fun isEnabled(position: Int): Boolean {
+//                // Disable first item (hint)
+//                return position != 0
+//            }
+//
+//            override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
+//                val view = super.getView(position, convertView, parent) as TextView
+//                view.setTextColor(
+//                    if (position == 0) Color.GRAY else Color.BLACK
+//                )
+//                return view
+//            }
+//
+//            override fun getDropDownView(position: Int, convertView: View?, parent: ViewGroup): View {
+//                val view = super.getDropDownView(position, convertView, parent) as TextView
+//                view.setTextColor(Color.BLACK)
+//                view.setPadding(24, 24, 24, 24)
+//                return view
+//            }
+//        }
+//
+//        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+//        spinner.adapter = adapter
+//    }
 
 
 
