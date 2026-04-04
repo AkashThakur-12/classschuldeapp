@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/surface_dark">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="24dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="ACADEMIC CURATOR"
+            android:textAppearance="@style/EditorialSubtitle"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="24dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Edit Profile"
+            android:textSize="28sp"
+            android:textStyle="bold"
+            android:textColor="@color/on_surface_light"
+            android:layout_marginBottom="32dp" />
+
+        <!-- Profile Image -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:layout_marginBottom="32dp">
+            <com.google.android.material.imageview.ShapeableImageView
+                android:id="@+id/editProfileImage"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:scaleType="centerCrop"
+                android:src="@drawable/profile_placeholder"
+                app:shapeAppearanceOverlay="@style/CircleImageStyle" />
+        </LinearLayout>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/changePhotoButton"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:text="Change Photo"
+            android:textColor="@color/secondary_teal"
+            app:backgroundTint="@color/surface_container"
+            app:cornerRadius="24dp"
+            android:layout_marginBottom="24dp" />
+
+        <!-- Name -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="NAME"
+            android:textAppearance="@style/EditorialSubtitle"
+            android:textSize="10sp"
+            android:layout_marginBottom="8dp" />
+        <EditText
+            android:id="@+id/editName"
+            android:layout_width="match_parent"
+            android:layout_height="52dp"
+            android:background="@drawable/pill_spinner_bg"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp"
+            android:textColor="@color/on_surface_light"
+            android:textColorHint="@color/on_surface_dim"
+            android:hint="Your name"
+            android:inputType="textPersonName"
+            android:layout_marginBottom="16dp" />
+
+        <!-- Branch -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="BRANCH"
+            android:textAppearance="@style/EditorialSubtitle"
+            android:textSize="10sp"
+            android:layout_marginBottom="8dp" />
+        <Spinner
+            android:id="@+id/editBranchSpinner"
+            android:layout_width="match_parent"
+            android:layout_height="52dp"
+            android:background="@drawable/pill_spinner_bg"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp"
+            android:layout_marginBottom="16dp" />
+
+        <!-- Semester -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="SEMESTER"
+            android:textAppearance="@style/EditorialSubtitle"
+            android:textSize="10sp"
+            android:layout_marginBottom="8dp" />
+        <Spinner
+            android:id="@+id/editSemSpinner"
+            android:layout_width="match_parent"
+            android:layout_height="52dp"
+            android:background="@drawable/pill_spinner_bg"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp"
+            android:layout_marginBottom="32dp" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/saveProfileButton"
+            android:layout_width="match_parent"
+            android:layout_height="52dp"
+            android:text="Save Changes"
+            android:textColor="@color/surface_dark"
+            android:textStyle="bold"
+            app:backgroundTint="@color/secondary_teal"
+            app:cornerRadius="26dp" />
+
+    </LinearLayout>
+</androidx.core.widget.NestedScrollView>

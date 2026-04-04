@@ -5,11 +5,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.akash.classsschuldeapp.schulde
-
-import org.jetbrains.annotations.Async
-
-
+import com.akash.classschuldeapp.schulde
 
 class ScheduleAdapter(private val scheduleList: List<schulde>) :
     RecyclerView.Adapter<ScheduleAdapter.ScheduleViewHolder>() {
@@ -17,12 +13,13 @@ class ScheduleAdapter(private val scheduleList: List<schulde>) :
     class ScheduleViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val subjectText: TextView = itemView.findViewById(R.id.subjectText)
         val timeText: TextView = itemView.findViewById(R.id.timeText)
-//        val timeLabel: TextView = itemView.findViewById(R.id.timeText)
+        val typeTag: TextView = itemView.findViewById(R.id.typeTag)
+        val instructorText: TextView = itemView.findViewById(R.id.instructorText)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ScheduleViewHolder {
         val view = LayoutInflater.from(parent.context)
-            .inflate(R.layout.item_schulde, parent, false)
+            .inflate(R.layout.item_schedule_editorial, parent, false)
         return ScheduleViewHolder(view)
     }
 
@@ -30,9 +27,8 @@ class ScheduleAdapter(private val scheduleList: List<schulde>) :
         val schedule = scheduleList[position]
         holder.subjectText.text = schedule.subject
         holder.timeText.text = schedule.time
-
-        // First part of time for the left label (e.g. "10:00 AM")
-//        holder.timeLabel.text = schedule.time.split("-")[0].trim()
+        holder.instructorText.text = "Academic Session"
+        holder.typeTag.text = "LECTURE"
     }
 
     override fun getItemCount() = scheduleList.size

@@ -1,8 +1,10 @@
-package com.akash.classsschuldeapp
-
+package com.akash.classschuldeapp
 
 data class schulde(
-    val time: String,
+    val id: Int,
+    val branch: String,
+    val sem: String,
+    val day: String,
     val subject: String,
-    val day: String
+    val time: String
 )

@@ -1,130 +1,182 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:gravity="center"
-    android:background="#000957">
+    android:background="@color/surface_dark">
 
-
-    <LinearLayout
-        android:layout_width="330dp"
+    <!-- Card layout -->
+    <com.google.android.material.card.MaterialCardView
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:background="@drawable/login_card_bg"
-        android:padding="20dp"
-        android:gravity="center">
-
-
-        <TextView
-            android:id="@+id/tvloginTitle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Login"
-            android:textSize="26sp"
-            android:textStyle="bold"
-            android:textColor="@android:color/white"
-            android:layout_gravity="center"/>
-
-        <TextView
-            android:id="@+id/tvsubtitle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Welcome to IIITL"
-            android:textSize="14sp"
-            android:layout_marginTop="5dp"
-            android:textColor="@android:color/white"
-            android:layout_gravity="center"/>
-
+        android:layout_marginHorizontal="28dp"
+        app:cardBackgroundColor="@color/surface_card"
+        app:cardCornerRadius="32dp"
+        app:cardElevation="0dp"
+        app:strokeWidth="0.5dp"
+        app:strokeColor="#15FFFFFF">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:background="@android:color/white"
-            android:layout_marginTop="20dp"
-            android:padding="20dp"
-            android:elevation="4dp"
-            android:gravity="center">
+            android:padding="32dp">
 
+            <!-- Logo / Icon -->
+            <ImageView
+                android:layout_width="56dp"
+                android:layout_height="56dp"
+                android:layout_gravity="center_horizontal"
+                android:src="@drawable/profile_placeholder"
+                app:tint="@color/primary_editorial" /> 
 
-            <EditText
-                android:id="@+id/etemail"
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="20dp"
+                android:text="CURATOR"
+                android:textAppearance="@style/EditorialSubtitle"
+                android:letterSpacing="0.4" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="8dp"
+                android:text="Academic Assistant"
+                android:textColor="@color/on_surface_dim"
+                android:textSize="14sp" />
+
+            <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:hint="Enter emailid "
-                android:drawableLeft="@android:drawable/ic_menu_edit"
-                android:background="@drawable/edittext_bg"
-                android:paddingLeft="10dp"
-                android:layout_marginBottom="15dp"/>
+                android:layout_height="wrap_content"
+                android:layout_marginTop="32dp"
+                android:hint="Email Address"
+                android:textColorHint="@color/on_surface_dim"
+                app:boxBackgroundColor="@color/surface_container"
+                app:boxCornerRadiusBottomEnd="20dp"
+                app:boxCornerRadiusBottomStart="20dp"
+                app:boxCornerRadiusTopEnd="20dp"
+                app:boxCornerRadiusTopStart="20dp"
+                app:boxStrokeWidth="0dp"
+                app:boxStrokeWidthFocused="0dp">
 
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/etEmail"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="textEmailAddress"
+                    android:textColor="@color/on_surface_light" />
+            </com.google.android.material.textfield.TextInputLayout>
 
-            <EditText
-                android:id="@+id/etpassword"
+            <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
-                android:layout_height="50dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
                 android:hint="Password"
-                android:inputType="textPassword"
-                android:drawableLeft="@android:drawable/ic_lock_idle_lock"
-                android:background="@drawable/edittext_bg"
-                android:paddingLeft="10dp"/>
+                android:textColorHint="@color/on_surface_dim"
+                app:boxBackgroundColor="@color/surface_container"
+                app:boxCornerRadiusBottomEnd="20dp"
+                app:boxCornerRadiusBottomStart="20dp"
+                app:boxCornerRadiusTopEnd="20dp"
+                app:boxCornerRadiusTopStart="20dp"
+                app:boxStrokeWidth="0dp"
+                app:boxStrokeWidthFocused="0dp"
+                app:endIconMode="password_toggle"
+                app:endIconTint="@color/on_surface_dim">
 
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/etPassword"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="textPassword"
+                    android:textColor="@color/on_surface_light" />
+            </com.google.android.material.textfield.TextInputLayout>
 
-            <Button
+            <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnLogin"
                 android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:text="LOGIN"
-                android:textAllCaps="true"
-                android:textColor="@android:color/white"
-                android:background="@drawable/btn_bg"
-                android:layout_marginTop="20dp"/>
-
-
-            <TextView
-                android:id="@+id/text"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="14sp"
-                android:layout_marginTop="15dp"
-                android:gravity="center"
-                android:textColor="#808080"
-                android:text="Don't Have An Account ? " />
-
-            <TextView
-                android:id="@+id/tvRegister"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Register Now"
+                android:layout_height="64dp"
+                android:layout_marginTop="32dp"
+                android:text="SIGN IN"
                 android:textSize="14sp"
                 android:textStyle="bold"
-                android:textColor="#357AE8"
-                android:clickable="true"
-                android:focusable="true"
-                android:layout_marginTop="15dp"/>
+                android:textColor="@color/surface_dark"
+                app:backgroundTint="@color/primary_editorial"
+                app:cornerRadius="20dp" />
 
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
 
-            <ImageView
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="0.5dp"
+                    android:layout_weight="1"
+                    android:background="#20FFFFFF" />
 
-                android:layout_width="34dp"
-                android:layout_height="34dp"
-                android:layout_margin="20dp"
-                android:src="@drawable/google_logo"
-                android:contentDescription="Google Logo"
-                android:id="@+id/google"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="16dp"
+                    android:text="or"
+                    android:textColor="@color/on_surface_dim"
+                    android:textSize="12sp" />
 
-            <ImageView
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:src="@drawable/fingerprint_dialog_fp_icon"
-                android:id="@+id/loginfingerprintButton"
-                />
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="0.5dp"
+                    android:layout_weight="1"
+                    android:background="#20FFFFFF" />
+            </LinearLayout>
 
-
-
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnGoogleSignIn"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                android:layout_width="match_parent"
+                android:layout_height="64dp"
+                android:layout_marginTop="24dp"
+                android:text="Continue with Google"
+                android:textColor="@color/on_surface_light"
+                android:textAllCaps="false"
+                app:icon="@drawable/google_logo"
+                app:iconGravity="textStart"
+                app:iconPadding="12dp"
+                app:iconTint="@null"
+                app:strokeColor="#30FFFFFF"
+                app:strokeWidth="0.5dp"
+                app:cornerRadius="20dp" />
 
         </LinearLayout>
+    </com.google.android.material.card.MaterialCardView>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="New here? "
+            android:textColor="@color/on_surface_dim"
+            android:textSize="14sp" />
+
+        <TextView
+            android:id="@+id/tvRegister"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Join Curator"
+            android:textColor="@color/secondary_teal"
+            android:textSize="14sp"
+            android:textStyle="bold" />
     </LinearLayout>
+
 </LinearLayout>
-
-
