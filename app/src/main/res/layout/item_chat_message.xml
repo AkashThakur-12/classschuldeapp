@@ -29,9 +29,20 @@
         android:id="@+id/userLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
+        android:orientation="vertical"
         android:gravity="end"
         android:layout_marginBottom="4dp">
+        
+        <ImageView
+            android:id="@+id/userAttachment"
+            android:layout_width="200dp"
+            android:layout_height="200dp"
+            android:scaleType="centerCrop"
+            android:visibility="gone"
+            android:background="@drawable/user_bubble_bg"
+            android:clipToOutline="true"
+            android:layout_marginBottom="4dp" />
+
         <TextView
             android:id="@+id/userMessage"
             android:layout_width="wrap_content"

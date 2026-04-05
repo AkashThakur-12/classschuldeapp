@@ -27,28 +27,21 @@ class ChatHistoryFragment : Fragment() {
         val emptyText = view.findViewById<TextView>(R.id.emptyHistoryText)
         recycler.layoutManager = LinearLayoutManager(requireContext())
 
-        val uid = auth.currentUser?.uid ?: return
-
-        db.collection("chat_history")
-            .whereEqualTo("userId", uid)
-            .orderBy("timestamp", Query.Direction.DESCENDING)
-            .get()
-            .addOnSuccessListener { result ->
-                if (!isAdded) return@addOnSuccessListener
-                val sessions = result.documents.mapNotNull { doc ->
-                    val userMsg = doc.getString("userMessage") ?: return@mapNotNull null
-                    val botReply = doc.getString("botReply") ?: ""
-                    val ts = doc.getLong("timestamp") ?: 0L
-                    Triple(userMsg, botReply, ts)
-                }
-                if (sessions.isEmpty()) {
-                    emptyText.visibility = View.VISIBLE
-                    recycler.visibility = View.GONE
-                } else {
-                    emptyText.visibility = View.GONE
-                    recycler.visibility = View.VISIBLE
-                    recycler.adapter = ChatHistoryAdapter(sessions)
-                }
-            }
+        val localSessions = ChatLocalStorage.getSessions(requireContext()).sortedByDescending { it.timestamp }
+        val sessions = localSessions.mapNotNull { session ->
+            val firstMsg = session.firstMessage
+            // to fetch bot reply we can just look up messages
+            val messages = ChatLocalStorage.getMessages(requireContext(), session.sessionId)
+            val botReply = messages.find { !it.isUser }?.text ?: ""
+            Triple(firstMsg, botReply, session.timestamp)
+        }
+        if (sessions.isEmpty()) {
+            emptyText.visibility = View.VISIBLE
+            recycler.visibility = View.GONE
+        } else {
+            emptyText.visibility = View.GONE
+            recycler.visibility = View.VISIBLE
+            recycler.adapter = ChatHistoryAdapter(sessions)
+        }
     }
 }

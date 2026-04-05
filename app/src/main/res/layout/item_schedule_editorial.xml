@@ -64,6 +64,16 @@
                     android:textSize="13sp"
                     android:textColor="@color/secondary_teal"
                     android:textStyle="bold" />
+
+                <ImageView
+                    android:id="@+id/btnCancelClass"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_marginStart="8dp"
+                    android:src="@android:drawable/ic_delete"
+                    app:tint="#F44336"
+                    android:visibility="gone"
+                    android:contentDescription="Cancel Class" />
             </LinearLayout>
 
             <!-- SUBJECT NAME -->
@@ -76,6 +86,18 @@
                 android:textStyle="bold"
                 android:textColor="@color/on_surface_light"
                 android:layout_marginBottom="6dp" />
+
+            <!-- CANCELLATION TEXT -->
+            <TextView
+                android:id="@+id/cancellationText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="CANCELLED"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                android:textColor="#F44336"
+                android:visibility="gone"
+                android:layout_marginBottom="4dp" />
 
             <!-- SUBTITLE -->
             <TextView

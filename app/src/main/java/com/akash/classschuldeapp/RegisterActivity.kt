@@ -28,8 +28,10 @@ class RegisterActivity : AppCompatActivity() {
                 return@setOnClickListener
             }
 
-            val branchRegex = Regex("^(lcs|lit|lcb|lci)(\\d{4})\\d+@iiitl\\.ac\\.in\$")
-            if (!branchRegex.matches(etemail.lowercase())) {
+            val studentRegex = Regex("^(lcs|lit|lcb|lci)(\\d{4})\\d+@iiitl\\.ac\\.in\$")
+            val facultyRegex = Regex("^[a-zA-Z.]+@iiitl\\.ac\\.in\$")
+
+            if (!studentRegex.matches(etemail.lowercase()) && !facultyRegex.matches(etemail.lowercase())) {
                 Toast.makeText(this, "You must use a valid IIITL domain email.", Toast.LENGTH_LONG).show()
                 return@setOnClickListener
             }
@@ -97,11 +99,11 @@ class RegisterActivity : AppCompatActivity() {
     private fun parseAndSaveUserDetails(email: String) {
         val prefs = getSharedPreferences("user_prefs", MODE_PRIVATE)
         // e.g., lcs2024008@iiitl.ac.in
-        val branchRegex = Regex("^(lcs|lit|lcb|lci)(\\d{4})\\d+@iiitl\\.ac\\.in\$")
-        val match = branchRegex.find(email.lowercase())
+        val studentRegex = Regex("^(lcs|lit|lcb|lci)(\\d{4})\\d+@iiitl\\.ac\\.in\$")
+        val studentMatch = studentRegex.find(email.lowercase())
 
-        if (match != null) {
-            val prefix = match.groupValues[1]
+        if (studentMatch != null) {
+            val prefix = studentMatch.groupValues[1]
             val branchCode = when (prefix) {
                 "lcs" -> "CS"
                 "lit" -> "IT"
@@ -109,7 +111,7 @@ class RegisterActivity : AppCompatActivity() {
                 "lci" -> "CSAI"
                 else -> "CS"
             }
-            val admissionYear = match.groupValues[2].toInt()
+            val admissionYear = studentMatch.groupValues[2].toInt()
             
             val currentYear = 2026 // Based on current setup
             val semNum = (currentYear - admissionYear) * 2
@@ -129,12 +131,28 @@ class RegisterActivity : AppCompatActivity() {
                 "branch" to branchCode,
                 "sem" to romanSem,
                 "name" to "Student",
+                "role" to "student",
                 "profileImageUrl" to ""
             )
 
             prefs.edit()
                 .putString("branch", branchCode)
                 .putString("sem", romanSem)
+                .putString("role", "student")
+                .apply()
+
+            // Sync with Firestore
+            db.collection("users").document(email)
+                .set(profileData)
+        } else {
+            // Assume Faculty
+            val profileData = mapOf(
+                "name" to "Faculty",
+                "role" to "faculty",
+                "profileImageUrl" to ""
+            )
+            prefs.edit()
+                .putString("role", "faculty")
                 .apply()
 
             // Sync with Firestore
