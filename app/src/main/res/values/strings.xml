@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">classschuldeapp</string>
+    <string name="app_name">ClassSync</string>
     <string name="default_web_client_id">854154052138-nrum54lnpq3f2fcg7o16al7s6lltdlqd.apps.googleusercontent.com</string>
     <string-array name="semester_array">
         <item>Semester 1</item>

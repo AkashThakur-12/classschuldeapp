@@ -14,8 +14,8 @@ import com.google.firebase.firestore.Query
 
 class ChatHistoryFragment : Fragment() {
 
-    private val db = FirebaseFirestore.getInstance()
-    private val auth = FirebaseAuth.getInstance()
+    private lateinit var recycler: RecyclerView
+    private lateinit var emptyText: TextView
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_chat_history, container, false)
@@ -23,25 +23,32 @@ class ChatHistoryFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val recycler = view.findViewById<RecyclerView>(R.id.historyRecycler)
-        val emptyText = view.findViewById<TextView>(R.id.emptyHistoryText)
+        recycler = view.findViewById(R.id.historyRecycler)
+        emptyText = view.findViewById(R.id.emptyHistoryText)
         recycler.layoutManager = LinearLayoutManager(requireContext())
 
+        refreshHistory()
+    }
+
+    private fun refreshHistory() {
+        if (!isAdded) return
         val localSessions = ChatLocalStorage.getSessions(requireContext()).sortedByDescending { it.timestamp }
-        val sessions = localSessions.mapNotNull { session ->
-            val firstMsg = session.firstMessage
-            // to fetch bot reply we can just look up messages
+        val sessions = localSessions.map { session ->
             val messages = ChatLocalStorage.getMessages(requireContext(), session.sessionId)
             val botReply = messages.find { !it.isUser }?.text ?: ""
-            Triple(firstMsg, botReply, session.timestamp)
+            Pair(session, botReply)
         }
+
         if (sessions.isEmpty()) {
             emptyText.visibility = View.VISIBLE
             recycler.visibility = View.GONE
         } else {
             emptyText.visibility = View.GONE
             recycler.visibility = View.VISIBLE
-            recycler.adapter = ChatHistoryAdapter(sessions)
+            recycler.adapter = ChatHistoryAdapter(sessions) { sessionToDelete ->
+                ChatLocalStorage.deleteSession(requireContext(), sessionToDelete.sessionId)
+                refreshHistory()
+            }
         }
     }
 }

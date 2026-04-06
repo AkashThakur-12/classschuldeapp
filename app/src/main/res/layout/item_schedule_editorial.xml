@@ -17,6 +17,7 @@
 
     <!-- SCHEDULE CARD -->
     <com.google.android.material.card.MaterialCardView
+        android:id="@+id/item_schedule_card"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="12dp"

@@ -8,13 +8,16 @@ import androidx.recyclerview.widget.RecyclerView
 import java.text.SimpleDateFormat
 import java.util.*
 
-class ChatHistoryAdapter(private val sessions: List<Triple<String, String, Long>>) :
-    RecyclerView.Adapter<ChatHistoryAdapter.HistoryViewHolder>() {
+class ChatHistoryAdapter(
+    private val sessions: List<Pair<ChatSessionItem, String>>,
+    private val onDeleteClick: (ChatSessionItem) -> Unit
+) : RecyclerView.Adapter<ChatHistoryAdapter.HistoryViewHolder>() {
 
     class HistoryViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val title: TextView = itemView.findViewById(R.id.sessionTitle)
         val date: TextView = itemView.findViewById(R.id.sessionDate)
         val preview: TextView = itemView.findViewById(R.id.sessionPreview)
+        val deleteBtn: View = itemView.findViewById(R.id.btnDeleteChat)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): HistoryViewHolder {
@@ -24,11 +27,16 @@ class ChatHistoryAdapter(private val sessions: List<Triple<String, String, Long>
     }
 
     override fun onBindViewHolder(holder: HistoryViewHolder, position: Int) {
-        val (userMsg, botReply, ts) = sessions[position]
+        val (session, botReply) = sessions[position]
+        val userMsg = session.firstMessage
         holder.title.text = if (userMsg.length > 40) userMsg.take(40) + "…" else userMsg
         holder.preview.text = botReply
         val sdf = SimpleDateFormat("dd MMM yyyy, hh:mm a", Locale.getDefault())
-        holder.date.text = sdf.format(Date(ts))
+        holder.date.text = sdf.format(Date(session.timestamp))
+        
+        holder.deleteBtn.setOnClickListener {
+            onDeleteClick(session)
+        }
     }
 
     override fun getItemCount() = sessions.size

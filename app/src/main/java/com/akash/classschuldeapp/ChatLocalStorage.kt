@@ -57,4 +57,15 @@ object ChatLocalStorage {
             emptyList()
         }
     }
+
+    fun deleteSession(context: Context, sessionId: String) {
+        val prefs = getPrefs(context)
+        val sessions = getSessions(context).toMutableList()
+        sessions.removeAll { it.sessionId == sessionId }
+        
+        prefs.edit()
+            .putString(KEY_SESSIONS, gson.toJson(sessions))
+            .remove(KEY_MESSAGES_PREFIX + sessionId)
+            .apply()
+    }
 }

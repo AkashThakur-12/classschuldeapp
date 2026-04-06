@@ -37,8 +37,9 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="20dp"
-                android:text="CURATOR"
+                android:text="ClassSync"
                 android:textAppearance="@style/EditorialSubtitle"
+                android:textAllCaps="false"
                 android:letterSpacing="0.4" />
 
             <TextView
@@ -173,7 +174,7 @@
             android:id="@+id/tvRegister"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Join Curator"
+            android:text="Join ClassSync"
             android:textColor="@color/secondary_teal"
             android:textSize="14sp"
             android:textStyle="bold" />

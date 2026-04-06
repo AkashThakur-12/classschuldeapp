@@ -7,14 +7,21 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.akash.classschuldeapp.schulde
 
-class ScheduleAdapter(private val scheduleList: List<schulde>) :
-    RecyclerView.Adapter<ScheduleAdapter.ScheduleViewHolder>() {
+class ScheduleAdapter(
+    private val scheduleList: List<schulde>,
+    private val isFaculty: Boolean = false,
+    private val onCancelClicked: ((schulde) -> Unit)? = null
+) : RecyclerView.Adapter<ScheduleAdapter.ScheduleViewHolder>() {
 
     class ScheduleViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val subjectText: TextView = itemView.findViewById(R.id.subjectText)
         val timeText: TextView = itemView.findViewById(R.id.timeText)
         val typeTag: TextView = itemView.findViewById(R.id.typeTag)
         val instructorText: TextView = itemView.findViewById(R.id.instructorText)
+        val btnCancelClass: android.widget.ImageView = itemView.findViewById(R.id.btnCancelClass)
+        val cancellationText: TextView = itemView.findViewById(R.id.cancellationText)
+        val cardView: com.google.android.material.card.MaterialCardView = itemView as? com.google.android.material.card.MaterialCardView 
+            ?: itemView.findViewById(R.id.item_schedule_card) // Fallback if needed
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ScheduleViewHolder {
@@ -29,6 +36,21 @@ class ScheduleAdapter(private val scheduleList: List<schulde>) :
         holder.timeText.text = schedule.time
         holder.instructorText.text = "Academic Session"
         holder.typeTag.text = "LECTURE"
+
+        // Handle Cancellation UI
+        if (schedule.isCancelled) {
+            holder.cancellationText.visibility = View.VISIBLE
+            holder.subjectText.alpha = 0.5f
+            holder.btnCancelClass.visibility = View.GONE
+        } else {
+            holder.cancellationText.visibility = View.GONE
+            holder.subjectText.alpha = 1.0f
+            holder.btnCancelClass.visibility = if (isFaculty) View.VISIBLE else View.GONE
+        }
+
+        holder.btnCancelClass.setOnClickListener {
+            onCancelClicked?.invoke(schedule)
+        }
     }
 
     override fun getItemCount() = scheduleList.size

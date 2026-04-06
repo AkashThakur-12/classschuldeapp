@@ -18,6 +18,12 @@ import java.util.Calendar
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withTimeout
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.ListenerRegistration
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.os.Build
+import androidx.core.app.NotificationCompat
 
 class HomeFragment : Fragment() {
 
@@ -26,6 +32,13 @@ class HomeFragment : Fragment() {
     private lateinit var semSpinner: Spinner
     private lateinit var dayPillContainer: android.widget.LinearLayout
     private var selectedDay = "MON"
+    
+    private val db = FirebaseFirestore.getInstance()
+    private var cancellationListener: ListenerRegistration? = null
+    private val cancelledClassIds = mutableSetOf<String>()
+    private var userRole: String = "student"
+    private var userBranch: String = ""
+    private var userSem: String = ""
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_home, container, false)
@@ -50,6 +63,9 @@ class HomeFragment : Fragment() {
         val prefs = requireActivity().getSharedPreferences("user_prefs", Context.MODE_PRIVATE)
         val savedBranch = prefs.getString("branch", "")
         val savedSem = prefs.getString("sem", "")
+        userRole = prefs.getString("role", "student") ?: "student"
+        userBranch = savedBranch ?: ""
+        userSem = savedSem ?: ""
 
         if (!savedBranch.isNullOrEmpty() && branches.contains(savedBranch)) {
             branchSpinner.setSelection(branches.indexOf(savedBranch))
@@ -57,6 +73,8 @@ class HomeFragment : Fragment() {
         if (!savedSem.isNullOrEmpty() && semesters.contains(savedSem)) {
             semSpinner.setSelection(semesters.indexOf(savedSem))
         }
+
+        setupCancellationListener()
 
         val calendar = Calendar.getInstance()
         selectedDay = when (calendar.get(Calendar.DAY_OF_WEEK)) {
@@ -131,6 +149,73 @@ class HomeFragment : Fragment() {
         }
     }
 
+    private fun setupCancellationListener() {
+        cancellationListener?.remove()
+
+        // Record the moment we attach the listener.
+        // We will ONLY show a notification for documents whose server timestamp
+        // is AFTER this point, so that historical / previous-semester
+        // cancellations never fire when the listener first syncs.
+        val listenerStartTime = System.currentTimeMillis()
+
+        cancellationListener = db.collection("class_announcements")
+            .whereEqualTo("isCancelled", true)
+            .addSnapshotListener { snapshots, e ->
+                if (e != null) return@addSnapshotListener
+
+                val newCancellations = mutableSetOf<String>()
+                snapshots?.forEach { doc ->
+                    val classId  = doc.getString("classId") ?: ""
+                    val branch   = doc.getString("branch")  ?: ""
+                    val sem      = doc.getString("sem")     ?: ""
+                    // The timestamp field is stored as a Long (milliseconds) when written
+                    val docTime  = doc.getLong("timestamp") ?: 0L
+
+                    if (classId.isNotEmpty()) {
+                        newCancellations.add(classId)
+
+                        val isNewForUser = !cancelledClassIds.contains(classId)
+                                && branch == userBranch
+                                && sem    == userSem
+                        // Only notify if this cancellation happened AFTER we
+                        // started listening — prevents old-semester alerts
+                        val isRecentlyCancelled = docTime > listenerStartTime
+
+                        if (isNewForUser && isRecentlyCancelled) {
+                            showCancellationNotification(doc.getString("subject") ?: "Class")
+                        }
+                    }
+                }
+
+                cancelledClassIds.clear()
+                cancelledClassIds.addAll(newCancellations)
+
+                // Refresh UI to reflect any cancellation changes
+                updateSchedule()
+            }
+    }
+
+    private fun showCancellationNotification(subject: String) {
+        if (!isAdded) return
+        val notificationManager = requireContext().getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        val channelId = "class_cancellation"
+        
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val channel = NotificationChannel(channelId, "Class Cancellations", NotificationManager.IMPORTANCE_HIGH)
+            notificationManager.createNotificationChannel(channel)
+        }
+
+        val notification = NotificationCompat.Builder(requireContext(), channelId)
+            .setSmallIcon(R.drawable.iiitl_logo)
+            .setContentTitle("Class Cancelled!")
+            .setContentText("Your $subject class has been cancelled.")
+            .setPriority(NotificationCompat.PRIORITY_HIGH)
+            .setAutoCancel(true)
+            .build()
+
+        notificationManager.notify(System.currentTimeMillis().toInt(), notification)
+    }
+
     private fun updateHeaderSubtitle() {
         val branch = branchSpinner.selectedItem?.toString() ?: ""
         val sem = semSpinner.selectedItem?.toString() ?: ""
@@ -169,9 +254,19 @@ class HomeFragment : Fragment() {
 
                 val filteredList = scheduleList.filter {
                     it.branch.equals(branch, ignoreCase = true) && it.sem == numericSem && it.day == selectedDay
+                }.map { cls ->
+                    // Unique ID based on branch, sem, day, time, subject
+                    val classId = "${cls.branch}_${cls.sem}_${cls.day}_${cls.time}_${cls.subject}".replace(" ", "_")
+                    if (cancelledClassIds.contains(classId)) {
+                        cls.copy(isCancelled = true)
+                    } else {
+                        cls
+                    }
                 }
 
-                recyclerView.adapter = ScheduleAdapter(filteredList)
+                recyclerView.adapter = ScheduleAdapter(filteredList, userRole == "faculty") { selectedClass ->
+                    cancelClass(selectedClass)
+                }
 
                 val emptyText = view?.findViewById<TextView>(R.id.emptyScheduleText)
                 if (filteredList.isEmpty()) {
@@ -182,7 +277,7 @@ class HomeFragment : Fragment() {
                 }
 
                 context?.let { ctx ->
-                    NotificationScheduler.scheduleClassReminders(ctx, filteredList)
+                    NotificationScheduler.scheduleClassReminders(ctx, filteredList.filter { !it.isCancelled })
                 }
 
             } catch (e: CancellationException) {
@@ -196,5 +291,31 @@ class HomeFragment : Fragment() {
                 }
             }
         }
+    }
+    private fun cancelClass(cls: schulde) {
+        val classId = "${cls.branch}_${cls.sem}_${cls.day}_${cls.time}_${cls.subject}".replace(" ", "_")
+        val data = hashMapOf(
+            "classId" to classId,
+            "branch" to cls.branch, // This should match what student sees (numeric)
+            "sem" to cls.sem,
+            "day" to cls.day,
+            "subject" to cls.subject,
+            "isCancelled" to true,
+            "cancelledBy" to (com.google.firebase.auth.FirebaseAuth.getInstance().currentUser?.email ?: "Faculty"),
+            "timestamp" to System.currentTimeMillis()
+        )
+
+        db.collection("class_announcements").document(classId).set(data)
+            .addOnSuccessListener {
+                Toast.makeText(requireContext(), "Class cancelled and students notified", Toast.LENGTH_SHORT).show()
+            }
+            .addOnFailureListener {
+                Toast.makeText(requireContext(), "Failed to cancel class", Toast.LENGTH_SHORT).show()
+            }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        cancellationListener?.remove()
     }
 }
